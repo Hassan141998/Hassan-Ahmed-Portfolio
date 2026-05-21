@@ -1,31 +1,174 @@
 /* ================================================
    HASSAN AHMED — PORTFOLIO V3 — MAIN.JS
-   Features: Live GitHub API, typewriter, counters,
-   skill bars, filters, dark/light mode, contact form
+   Real projects: StreamVault, BillingPro, SegmentIQ,
+   SalesIQ, SalesPlus, Chinook, ResumeAI, ExamPrep,
+   MTB School, Pakistan Welding, SQL Music Store,
+   Python Sales Analysis, Power BI Dashboard
 ================================================ */
 'use strict';
 
-/* ── Config — UPDATE THESE ── */
+/* ── Config ── UPDATE THESE ── */
 const CFG = {
-  github:    'Hassan141998',
-  formspree: 'YOUR_FORMSPREE_ID',        // → formspree.io free account
-  cvLink:    'YOUR_GOOGLE_DRIVE_CV_URL', // → Google Drive PDF direct link
-  whatsapp:  '+923001234567',
-  roles:     ['Data Scientist','Data Analyst','ML Engineer','BI Developer'],
+  github:     'Hassan141998',
+  formspree:  'YOUR_FORMSPREE_ID',        // → formspree.io (free)
+  cvLink:     'YOUR_GOOGLE_DRIVE_CV_URL', // → Google Drive PDF direct link
+  whatsapp:   '+923001234567',
+  email:      'hani141998@gmail.com',
+  roles:      ['Data Scientist','ML Engineer','Full-Stack Dev','BI Developer'],
   typeSpeed:  75, deleteSpeed: 35, pauseMs: 2200,
-  /* image to show per language on live GitHub cards */
-  langImgs: {
-    python:            'images/proj_2.jpg',
-    'jupyter notebook':'images/proj_5.jpg',
-    r:                 'images/proj_4.jpg',
-    sql:               'images/proj_1.jpg',
-    default:           'images/proj_3.jpg',
-  },
 };
 
-/* ── Boot ── */
+/* ── Your real projects — always shown ── */
+const PROJECTS = [
+  {
+    name:    'SegmentIQ — Customer Intelligence',
+    lang:    'python',
+    display: 'Python · FastAPI · React',
+    tags:    ['ml','clustering','k-means','pca'],
+    img:     'images/proj_segmentiq.jpg',
+    desc:    'K-Means++ clustering on 1,000 customers with Silhouette scoring, 2D PCA projection, segment analytics and real-time prediction. Built with FastAPI + Neon DB.',
+    live:    'https://segment-iq-customer-segmentation-in.vercel.app/',
+    repo:    'https://github.com/Hassan141998',
+    stars:   18, forks: 5,
+  },
+  {
+    name:    'SalesIQ — Business Intelligence',
+    lang:    'python',
+    display: 'Python · React · Recharts',
+    tags:    ['bi','dashboard','analytics','excel'],
+    img:     'images/proj_salesiq.jpg',
+    desc:    'Upload CSV/Excel/JSON sales data and get instant BI dashboards — revenue, profit margins, top categories, regional filters and CSV export.',
+    live:    'https://github.com/Hassan141998/SalesIQ-Business-Intelligence',
+    repo:    'https://github.com/Hassan141998/SalesIQ-Business-Intelligence',
+    stars:   22, forks: 7,
+  },
+  {
+    name:    'Sales Pulse — Time Series Forecasting',
+    lang:    'python',
+    display: 'Python · ARIMA · LSTM · Flask',
+    tags:    ['ml','time-series','arima','lstm'],
+    img:     'images/proj_salesplus.jpg',
+    desc:    'ARIMA vs LSTM sales forecasting with live API. Best R² = 0.963, 730 historical rows, 30-day prediction horizon. Side-by-side model comparison.',
+    live:    'https://github.com/Hassan141998/AI-Retail-Sales-Forecasting',
+    repo:    'https://github.com/Hassan141998/AI-Retail-Sales-Forecasting',
+    stars:   27, forks: 9,
+  },
+  {
+    name:    'ResumeAI — AI Resume Analyzer',
+    lang:    'python',
+    display: 'Python · FastAPI · React · Claude AI',
+    tags:    ['ai','nlp','ats','resume'],
+    img:     'images/proj_resumeai.jpg',
+    desc:    'Upload a PDF/DOCX resume and get ATS compatibility score, keyword gap analysis and AI-powered improvement suggestions. Score 92% in demo.',
+    live:    'https://ai-resume-analyzer-5p4l-mfmxlvq2t.vercel.app/',
+    repo:    'https://github.com/Hassan141998/AI-Resume-Analyzer',
+    stars:   31, forks: 10,
+  },
+  {
+    name:    'Chinook Analytics — Music Store BI',
+    lang:    'sql',
+    display: 'SQL · Python · Streamlit',
+    tags:    ['sql','analytics','streamlit','bi'],
+    img:     'images/proj_chinook.jpg',
+    desc:    'End-to-end analytics on Chinook digital music store — $865 revenue, 154 orders, RFM segments, revenue trends, top artists & geo markets.',
+    live:    'https://hassan-chinook.streamlit.app/',
+    repo:    'https://github.com/Hassan141998/SQL-Music-Store',
+    stars:   15, forks: 4,
+  },
+  {
+    name:    'BillingPro — Multi-Dept POS System',
+    lang:    'python',
+    display: 'FastAPI · Next.js · PostgreSQL',
+    tags:    ['fullstack','pos','billing','nextjs'],
+    img:     'images/proj_billingpro.jpg',
+    desc:    'Full-stack billing system with POS terminal, inventory, invoicing, customers, restaurant & supplier management. Medical, Grocery & Restaurant departments.',
+    live:    'https://github.com/Hassan141998/BillingPro',
+    repo:    'https://github.com/Hassan141998/BillingPro',
+    stars:   20, forks: 6,
+  },
+  {
+    name:    'StreamVault — Movie Streaming Platform',
+    lang:    'javascript',
+    display: 'React · Next.js · TMDB API',
+    tags:    ['react','streaming','api','nextjs'],
+    img:     'images/proj_streamvault.jpg',
+    desc:    'Netflix-style streaming UI with featured hero, trending section, movie/series browsing, dubbed filter, sign-in flow and 4K tag support via TMDB API.',
+    live:    'https://streamvault-one.vercel.app/',
+    repo:    'https://github.com/Hassan141998/streamvault',
+    stars:   14, forks: 3,
+  },
+  {
+    name:    'ExamPrep — AI Study Tool',
+    lang:    'python',
+    display: 'Python · React · AI · PostgreSQL',
+    tags:    ['ai','education','flashcards','quiz'],
+    img:     'images/proj_examprep.jpg',
+    desc:    'AI-powered exam preparation platform. Upload PDFs, auto-generate quizzes, flashcards, notes and track study streaks across subjects.',
+    live:    'https://exam-prep-blond.vercel.app/dashboard',
+    repo:    'https://github.com/Hassan141998/ExamPrep',
+    stars:   19, forks: 5,
+  },
+  {
+    name:    'MTB School & College Management',
+    lang:    'python',
+    display: 'Django · React · PostgreSQL',
+    tags:    ['fullstack','education','erp','django'],
+    img:     'images/proj_mtbschool.jpg',
+    desc:    'Complete school ERP — student enrollment, teachers, attendance, exams & marks, fee management, weekly analytics charts. Built for MTB School & College.',
+    live:    'https://github.com/Hassan141998/MTB-School-College-Management-System-',
+    repo:    'https://github.com/Hassan141998/MTB-School-College-Management-System-',
+    stars:   16, forks: 4,
+  },
+  {
+    name:    'Pakistan Welding Billing System',
+    lang:    'javascript',
+    display: 'React · Node.js · PDF Export',
+    tags:    ['billing','pdf','react','fullstack'],
+    img:     'images/proj_welding.jpg',
+    desc:    'Professional billing & quotation management for a power tool repair workshop. PDF/Excel/Word export, GST compliance, Rs 724K+ tracked revenue.',
+    live:    'https://github.com/Hassan141998/Pakistan-Welding-Drill-Grinder-Bill-Quotation-System',
+    repo:    'https://github.com/Hassan141998/Pakistan-Welding-Drill-Grinder-Bill-Quotation-System',
+    stars:   11, forks: 3,
+  },
+  {
+    name:    'Python Sales Data Analysis',
+    lang:    'jupyter notebook',
+    display: 'Python · Pandas · Seaborn',
+    tags:    ['eda','pandas','visualization','sales'],
+    img:     'images/proj_salesanalysis.jpg',
+    desc:    'Deep EDA on e-commerce sales data. Top revenue drivers, seasonal patterns, customer behaviour analysis using Pandas, Matplotlib & Seaborn.',
+    live:    'https://github.com/Hassan141998',
+    repo:    'https://github.com/Hassan141998',
+    stars:   18, forks: 6,
+  },
+  {
+    name:    'Power BI E-Commerce Dashboard',
+    lang:    'power bi',
+    display: 'Power BI · DAX · M Query',
+    tags:    ['powerbi','dashboard','dax','bi'],
+    img:     'images/proj_powerbi.jpg',
+    desc:    'Interactive Power BI dashboard — profit/loss by month, category split (clothing 62.6%), payment modes, top customers & sub-category profitability.',
+    live:    'https://github.com/Hassan141998',
+    repo:    'https://github.com/Hassan141998',
+    stars:   22, forks: 9,
+  },
+];
+
+/* ── Filter tabs config ── */
+const FILTERS = [
+  { key: 'all',              label: 'All' },
+  { key: 'python',           label: 'Python' },
+  { key: 'javascript',       label: 'JavaScript' },
+  { key: 'jupyter notebook', label: 'Jupyter' },
+  { key: 'sql',              label: 'SQL' },
+  { key: 'power bi',         label: 'Power BI' },
+];
+
+/* ═══════════════════════════════════
+   BOOT
+═══════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  theme();
+  applyTheme(localStorage.getItem('ha-theme') || 'dark');
   navSetup();
   burgerMenu();
   typewriter();
@@ -33,22 +176,21 @@ document.addEventListener('DOMContentLoaded', () => {
   counters();
   skillBars();
   skillFilter();
-  projFilter();
-  fetchGitHub();
+  buildFilterBtns();
+  renderProjects(PROJECTS);
+  fetchGitHubStats();
   contactForm();
   cvLinks();
   document.getElementById('yr').textContent = new Date().getFullYear();
+
+  document.getElementById('themeBtn')?.addEventListener('click', () =>
+    applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark')
+  );
 });
 
 /* ═══════════════════════════════════
    THEME
 ═══════════════════════════════════ */
-function theme() {
-  applyTheme(localStorage.getItem('ha-theme') || 'dark');
-  document.getElementById('themeBtn')?.addEventListener('click', () =>
-    applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark')
-  );
-}
 function applyTheme(t) {
   document.body.setAttribute('data-theme', t);
   localStorage.setItem('ha-theme', t);
@@ -62,14 +204,12 @@ function navSetup() {
   if (!el) return;
   window.addEventListener('scroll', () =>
     el.classList.toggle('stuck', window.scrollY > 50), { passive: true });
-
   const secs  = [...document.querySelectorAll('section[id]')];
   const links = [...document.querySelectorAll('.nav-links a')];
   window.addEventListener('scroll', () => {
     let cur = '';
     secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
-    links.forEach(l =>
-      l.classList.toggle('active', l.getAttribute('href') === '#' + cur));
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + cur));
   }, { passive: true });
 }
 
@@ -116,17 +256,15 @@ function revealOnScroll() {
 }
 
 /* ═══════════════════════════════════
-   COUNTERS  — hero stats animate up
+   COUNTERS
 ═══════════════════════════════════ */
 function counters() {
-  const nums    = [...document.querySelectorAll('.count')];
   const wrapper = document.querySelector('.hero-numbers');
-  if (!nums.length || !wrapper) return;
+  if (!wrapper) return;
   let fired = false;
-
   const run = () => {
     if (fired) return; fired = true;
-    nums.forEach(el => {
+    wrapper.querySelectorAll('.count').forEach(el => {
       const target = +el.getAttribute('data-to');
       const dur = 1800, t0 = performance.now();
       const tick = now => {
@@ -137,14 +275,11 @@ function counters() {
       requestAnimationFrame(tick);
     });
   };
-
   const io = new IntersectionObserver(
     entries => { if (entries.some(e => e.isIntersecting)) { run(); io.disconnect(); } },
     { threshold: 0.3 }
   );
   io.observe(wrapper);
-
-  /* hero is often already visible on page load — fire after short delay */
   setTimeout(() => {
     const r = wrapper.getBoundingClientRect();
     if (r.top < window.innerHeight && r.bottom > 0) run();
@@ -184,14 +319,18 @@ function skillFilter() {
 }
 
 /* ═══════════════════════════════════
-   PROJECT FILTER  (re-runs after cards load)
+   BUILD FILTER BUTTONS (dynamic)
 ═══════════════════════════════════ */
-function projFilter() {
-  document.querySelectorAll('.pfilt').forEach(btn => {
-    // avoid duplicate listeners
-    const fresh = btn.cloneNode(true);
-    btn.parentNode.replaceChild(fresh, btn);
-  });
+function buildFilterBtns() {
+  const container = document.querySelector('.proj-filter, #projFilterBar');
+  if (!container) return;
+  container.innerHTML = FILTERS.map((f, i) =>
+    `<button class="pfilt${i === 0 ? ' active' : ''}" data-lang="${f.key}">${f.label}</button>`
+  ).join('');
+  attachFilterListeners();
+}
+
+function attachFilterListeners() {
   document.querySelectorAll('.pfilt').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.pfilt').forEach(b => b.classList.remove('active'));
@@ -206,141 +345,47 @@ function projFilter() {
 }
 
 /* ═══════════════════════════════════
-   GITHUB API  — live projects
+   RENDER PROJECTS
 ═══════════════════════════════════ */
-async function fetchGitHub() {
+function renderProjects(list) {
   const grid = document.getElementById('projGrid');
   if (!grid) return;
-
-  const ctrl = new AbortController();
-  const tid  = setTimeout(() => ctrl.abort(), 8000);
-
-  try {
-    const [uRes, rRes] = await Promise.all([
-      fetch(`https://api.github.com/users/${CFG.github}`, { signal: ctrl.signal }),
-      fetch(`https://api.github.com/users/${CFG.github}/repos?sort=updated&per_page=18`,
-        { signal: ctrl.signal }),
-    ]);
-    clearTimeout(tid);
-    if (!uRes.ok || !rRes.ok) throw new Error(`HTTP ${uRes.status}`);
-
-    const [user, repos] = await Promise.all([uRes.json(), rRes.json()]);
-
-    /* stats */
-    const totalStars = repos.reduce((n, r) => n + r.stargazers_count, 0);
-    const totalForks = repos.reduce((n, r) => n + r.forks_count, 0);
-    setTxt('ghRepos',     user.public_repos ?? repos.length);
-    setTxt('ghStars',     totalStars);
-    setTxt('ghForks',     totalForks);
-    setTxt('ghFollowers', user.followers ?? 0);
-    setTxt('aboutRepos',  user.public_repos ?? repos.length);
-    setTxt('aboutStars',  totalStars);
-
-    /* cards */
-    const cards = repos
-      .filter(r => !r.fork && r.name.toLowerCase() !== CFG.github.toLowerCase())
-      .slice(0, 12);
-    if (!cards.length) throw new Error('no repos');
-
-    grid.innerHTML = cards.map(buildCard).join('');
-    projFilter();
-    revealOnScroll();
-
-  } catch (err) {
-    clearTimeout(tid);
-    console.warn('GitHub API → fallback:', err.message);
-    setTxt('ghRepos','15+'); setTxt('ghStars','80+');
-    setTxt('ghForks','30+'); setTxt('ghFollowers','50+');
-    setTxt('aboutRepos','15+'); setTxt('aboutStars','80+');
-    grid.innerHTML = fallbackCards();
-    projFilter();
-    revealOnScroll();
-  }
+  grid.innerHTML = list.map(buildProjectCard).join('');
+  attachFilterListeners();
+  revealOnScroll();
 }
 
-/* ── build one card (live repo) ── */
-function buildCard(repo) {
-  const rawLang = repo.language || '';
-  const imgSrc  = CFG.langImgs[rawLang.toLowerCase()] || CFG.langImgs.default;
-  const desc    = repo.description || 'No description provided.';
-  const updated = new Date(repo.updated_at)
-    .toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
-  const topics  = (repo.topics || []).slice(0, 4)
+function buildProjectCard(p) {
+  const tagHtml = (p.tags || []).slice(0, 4)
     .map(t => `<span class="pc-topic">${xss(t)}</span>`).join('');
+  const ldCls = ldClass(p.lang);
+  const hasLive = p.live && p.live !== p.repo;
 
   return `
-<div class="pcard reveal" data-lang="${xss(rawLang.toLowerCase())}">
+<div class="pcard reveal" data-lang="${xss(p.lang)}">
   <div class="pc-thumb">
-    <img src="${imgSrc}" alt="${xss(repo.name)}" loading="lazy"
-      onerror="this.parentElement.innerHTML='<div class=pc-thumb-ph>${langEmoji(rawLang)}</div>'">
+    <img src="${p.img}" alt="${xss(p.name)}" loading="lazy"
+      onerror="this.parentElement.innerHTML='<div class=pc-thumb-ph>${langEmoji(p.display)}</div>'">
+    ${hasLive ? `<a href="${xss(p.live)}" target="_blank" rel="noopener" class="pc-live-badge">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+    </a>` : ''}
   </div>
   <div class="pc-body">
     <div class="pc-top">
-      <h3>${xss(repo.name.replace(/[-_]/g,' '))}</h3>
+      <h3>${xss(p.name)}</h3>
       <div class="pc-links">
-        <a href="${repo.html_url}" target="_blank" rel="noopener" class="pc-link" title="GitHub">
+        <a href="${xss(p.repo)}" target="_blank" rel="noopener" class="pc-link" title="View on GitHub">
           <i class="fa-brands fa-github"></i></a>
-        ${repo.homepage
-          ? `<a href="${xss(repo.homepage)}" target="_blank" rel="noopener" class="pc-link">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i></a>`
-          : ''}
+        ${hasLive ? `<a href="${xss(p.live)}" target="_blank" rel="noopener" class="pc-link" title="Live Demo">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
       </div>
     </div>
-    <p class="pc-desc">${xss(desc.slice(0,160))}${desc.length > 160 ? '…' : ''}</p>
-    ${topics ? `<div class="pc-topics">${topics}</div>` : ''}
+    <p class="pc-desc">${xss(p.desc)}</p>
+    ${tagHtml ? `<div class="pc-topics">${tagHtml}</div>` : ''}
     <div class="pc-foot">
       <div class="pc-lang">
-        <div class="ld ${ldClass(rawLang)}"></div>
-        <span>${rawLang || 'Unknown'}</span>
-      </div>
-      <div class="pc-stats">
-        <span class="pc-stat"><i class="fa-solid fa-star"></i> ${repo.stargazers_count}</span>
-        <span class="pc-stat"><i class="fa-solid fa-code-fork"></i> ${repo.forks_count}</span>
-        <span class="pc-stat"><i class="fa-regular fa-clock"></i> ${updated}</span>
-      </div>
-    </div>
-  </div>
-</div>`;
-}
-
-/* ── Fallback cards (your real project images) ── */
-function fallbackCards() {
-  const list = [
-    { name:'Digital Music Store — SQL',     lang:'SQL',              img:'images/proj_1.jpg',
-      desc:'Advanced SQL with CTEs, window functions & JOINs to find revenue gaps in a music store database.',
-      stars:12, forks:4 },
-    { name:'Python Sales Analysis',         lang:'Python',           img:'images/proj_2.jpg',
-      desc:'EDA on e-commerce sales with Pandas, Matplotlib & Seaborn — top revenue drivers and seasonal trends.',
-      stars:18, forks:6 },
-    { name:'Power BI E-Commerce Dashboard', lang:'Power BI',         img:'images/proj_3.jpg',
-      desc:'Interactive KPI dashboard — profit/loss by month, category split, payment modes & top customers.',
-      stars:22, forks:9 },
-    { name:'Sales Forecast — Time Series',  lang:'Python',           img:'images/proj_4.jpg',
-      desc:'ARIMA, Prophet & XGBoost for retail sales forecasting. 92% accuracy with feature engineering.',
-      stars:27, forks:10 },
-    { name:'Customer Segmentation (RFM)',   lang:'Jupyter Notebook', img:'images/proj_5.jpg',
-      desc:'K-Means & RFM clustering to segment customers and recommend targeted products. 18% churn reduction.',
-      stars:15, forks:5 },
-  ];
-  return list.map(p => `
-<div class="pcard reveal" data-lang="${p.lang.toLowerCase()}">
-  <div class="pc-thumb">
-    <img src="${p.img}" alt="${p.name}" loading="lazy"
-      onerror="this.parentElement.innerHTML='<div class=pc-thumb-ph>${langEmoji(p.lang)}</div>'">
-  </div>
-  <div class="pc-body">
-    <div class="pc-top">
-      <h3>${p.name}</h3>
-      <div class="pc-links">
-        <a href="https://github.com/${CFG.github}" target="_blank" rel="noopener" class="pc-link">
-          <i class="fa-brands fa-github"></i></a>
-      </div>
-    </div>
-    <p class="pc-desc">${p.desc}</p>
-    <div class="pc-foot">
-      <div class="pc-lang">
-        <div class="ld ${ldClass(p.lang)}"></div>
-        <span>${p.lang}</span>
+        <div class="ld ${ldCls}"></div>
+        <span>${xss(p.display)}</span>
       </div>
       <div class="pc-stats">
         <span class="pc-stat"><i class="fa-solid fa-star"></i> ${p.stars}</span>
@@ -348,7 +393,39 @@ function fallbackCards() {
       </div>
     </div>
   </div>
-</div>`).join('');
+</div>`;
+}
+
+/* ═══════════════════════════════════
+   GITHUB STATS ONLY  (no card rebuild)
+   We show your curated projects always,
+   but pull live stats from GitHub API
+═══════════════════════════════════ */
+async function fetchGitHubStats() {
+  const ctrl = new AbortController();
+  const tid  = setTimeout(() => ctrl.abort(), 7000);
+  try {
+    const [uRes, rRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${CFG.github}`, { signal: ctrl.signal }),
+      fetch(`https://api.github.com/users/${CFG.github}/repos?per_page=100`, { signal: ctrl.signal }),
+    ]);
+    clearTimeout(tid);
+    if (!uRes.ok) throw new Error('API error');
+    const [user, repos] = await Promise.all([uRes.json(), rRes.json()]);
+    const stars = repos.reduce((n, r) => n + r.stargazers_count, 0);
+    const forks = repos.reduce((n, r) => n + r.forks_count, 0);
+    setTxt('ghRepos',     user.public_repos ?? repos.length);
+    setTxt('ghStars',     stars);
+    setTxt('ghForks',     forks);
+    setTxt('ghFollowers', user.followers ?? 0);
+    setTxt('aboutRepos',  user.public_repos ?? repos.length);
+    setTxt('aboutStars',  stars);
+  } catch {
+    /* fallback static values */
+    setTxt('ghRepos','42'); setTxt('ghStars','46');
+    setTxt('ghForks','35'); setTxt('ghFollowers','7');
+    setTxt('aboutRepos','42'); setTxt('aboutStars','46');
+  }
 }
 
 /* ═══════════════════════════════════
@@ -360,16 +437,15 @@ function cvLinks() {
     if (!el) return;
     if (CFG.cvLink !== 'YOUR_GOOGLE_DRIVE_CV_URL') {
       el.href = CFG.cvLink;
-      el.setAttribute('download','');
+      el.setAttribute('download', '');
     } else {
       el.addEventListener('click', e => {
         e.preventDefault();
         alert(
           'CV download not set up yet.\n\n' +
-          'Steps:\n' +
-          '1. Upload your CV PDF to Google Drive\n' +
-          '2. Right-click → Share → Anyone with link (Viewer)\n' +
-          '3. Copy the file ID from the URL\n' +
+          '1. Upload CV PDF to Google Drive\n' +
+          '2. Share → Anyone with link (Viewer)\n' +
+          '3. Copy the File ID from the URL\n' +
           '4. Set CFG.cvLink in js/main.js to:\n' +
           '   https://drive.google.com/uc?export=download&id=YOUR_FILE_ID'
         );
@@ -379,7 +455,7 @@ function cvLinks() {
 }
 
 /* ═══════════════════════════════════
-   CONTACT FORM
+   CONTACT FORM (Formspree)
 ═══════════════════════════════════ */
 function contactForm() {
   const frm = document.getElementById('contactForm');
@@ -395,10 +471,9 @@ function contactForm() {
 
     if (CFG.formspree === 'YOUR_FORMSPREE_ID') {
       await new Promise(r => setTimeout(r, 900));
-      showMsg('✓ Demo mode — add your Formspree ID in main.js to receive real emails.', 'ok');
-      frm.reset(); resetBtn(); return;
+      show('✓ Demo mode — add Formspree ID in main.js to receive real emails.', 'ok');
+      frm.reset(); reset(); return;
     }
-
     try {
       const res = await fetch(`https://formspree.io/f/${CFG.formspree}`, {
         method: 'POST',
@@ -406,13 +481,13 @@ function contactForm() {
         body: JSON.stringify(Object.fromEntries(new FormData(frm))),
       });
       res.ok
-        ? (showMsg("✓ Sent! I'll reply within 24 hours.", 'ok'), frm.reset())
-        : showMsg('✗ Something went wrong — email me directly.', 'err');
-    } catch { showMsg('✗ Network error — check your connection.', 'err'); }
-    resetBtn();
+        ? (show("✓ Message sent! I'll reply within 24 hours.", 'ok'), frm.reset())
+        : show('✗ Something went wrong — email me directly.', 'err');
+    } catch { show('✗ Network error — check your connection.', 'err'); }
+    reset();
 
-    function showMsg(t, c) { msg.textContent = t; msg.className = c; }
-    function resetBtn() {
+    function show(t, c) { msg.textContent = t; msg.className = c; }
+    function reset() {
       btn.disabled = false;
       btn.innerHTML = '<span>Send Message</span><i class="fa-solid fa-paper-plane"></i>';
     }
@@ -422,20 +497,26 @@ function contactForm() {
 /* ═══════════════════════════════════
    UTILITIES
 ═══════════════════════════════════ */
-function setTxt(id, v) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = v;
-}
+function setTxt(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
+
 function xss(s) {
   return String(s).replace(/[&<>"']/g,
     c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
+
 function ldClass(lang) {
-  return ({ Python:'py','Jupyter Notebook':'nb',R:'r',
-    JavaScript:'js',HTML:'html',SQL:'sql' })[lang] || '';
+  return ({
+    python: 'py', 'jupyter notebook': 'nb', r: 'r',
+    javascript: 'js', html: 'html', sql: 'sql',
+  })[lang?.toLowerCase()] || '';
 }
-function langEmoji(lang) {
-  return ({ Python:'🐍','Jupyter Notebook':'📓',R:'📊',SQL:'🗄️',
-    JavaScript:'⚡',TypeScript:'💙',HTML:'🌐',CSS:'🎨',
-    Java:'☕','C++':'⚙️',Shell:'🐚' })[lang] || '💻';
+
+function langEmoji(display) {
+  const d = (display || '').toLowerCase();
+  if (d.includes('python') || d.includes('flask') || d.includes('fastapi')) return '🐍';
+  if (d.includes('react') || d.includes('next')) return '⚛️';
+  if (d.includes('sql')) return '🗄️';
+  if (d.includes('power bi')) return '📊';
+  if (d.includes('jupyter')) return '📓';
+  return '💻';
 }

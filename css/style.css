@@ -181,6 +181,19 @@ body{background:var(--bg);color:var(--text)}
 .ld.html{background:#e34c26}.ld.nb{background:#DA5B0B}.ld.sql{background:#e38c00}
 .pc-stats{display:flex;gap:.75rem}
 .pc-stat{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--text3);font-family:var(--font-mono)}
+/* Live demo badge on project thumbnail */
+.pc-live-badge{
+  position:absolute;bottom:.75rem;right:.75rem;
+  display:inline-flex;align-items:center;gap:.35rem;
+  background:var(--acc);color:#000;font-size:.7rem;font-weight:600;
+  padding:.3rem .7rem;border-radius:50px;
+  font-family:var(--font-mono);letter-spacing:.04em;
+  opacity:0;transition:opacity var(--t);
+  pointer-events:none;
+}
+.pcard:hover .pc-live-badge{opacity:1;pointer-events:auto;}
+.pc-thumb{position:relative;}
+
 .proj-more{text-align:center;margin-top:2.5rem}
 
 /* EXPERIENCE */
