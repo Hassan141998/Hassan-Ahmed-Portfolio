@@ -520,3 +520,239 @@ function langEmoji(display) {
   if (d.includes('jupyter')) return '📓';
   return '💻';
 }
+
+/* ═══════════════════════════════════════════════
+   HOVER LIGHT REVEAL — SPOTLIGHT EFFECT
+   A dark overlay with a radial light that follows
+   the cursor, revealing the hero content beneath.
+═══════════════════════════════════════════════ */
+(function initSpotlight() {
+  const canvas = document.getElementById('spotlightCanvas');
+  if (!canvas) return;
+
+  const hero = document.getElementById('home');
+  const ctx  = canvas.getContext('2d');
+
+  // Current and target mouse positions (for smooth lerp)
+  let mx = 0, my = 0;       // actual mouse
+  let cx = -999, cy = -999; // current (lerped) position
+  let entered = false;
+  let raf;
+
+  /* Size canvas to hero */
+  function resize() {
+    canvas.width  = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* Track mouse inside hero */
+  hero.addEventListener('mouseenter', e => {
+    entered = true;
+    const r = hero.getBoundingClientRect();
+    cx = mx = e.clientX - r.left;
+    cy = my = e.clientY - r.top;
+  });
+  hero.addEventListener('mousemove', e => {
+    const r = hero.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+  });
+  hero.addEventListener('mouseleave', () => { entered = false; });
+
+  /* Draw one frame */
+  function draw() {
+    raf = requestAnimationFrame(draw);
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    if (!entered && cx < 0) {
+      // Before first hover: subtle static vignette
+      const grad = ctx.createRadialGradient(W/2, H/2, H*0.1, W/2, H/2, H*0.85);
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.55)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+      return;
+    }
+
+    // Smooth lerp toward real mouse position
+    const speed = entered ? 0.09 : 0.04;
+    cx += (mx - cx) * speed;
+    cy += (my - cy) * speed;
+
+    const radius = Math.max(W, H) * 0.38;
+
+    // Layer 1: Full dark overlay
+    ctx.fillStyle = 'rgba(0,0,0,0.72)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Layer 2: Spotlight cutout (destination-out punches hole)
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    const spot = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    spot.addColorStop(0,   'rgba(0,0,0,0.92)');
+    spot.addColorStop(0.45,'rgba(0,0,0,0.65)');
+    spot.addColorStop(0.75,'rgba(0,0,0,0.2)');
+    spot.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = spot;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Layer 3: Acid-lime tint ring at cursor centre
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    const tint = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.35);
+    tint.addColorStop(0,   'rgba(200,241,53,0.07)');
+    tint.addColorStop(0.6, 'rgba(200,241,53,0.02)');
+    tint.addColorStop(1,   'rgba(200,241,53,0)');
+    ctx.fillStyle = tint;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 0.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  draw();
+})();
+
+
+/* ═══════════════════════════════════════════════
+   FLOATING PARTICLES  — hero background dots
+═══════════════════════════════════════════════ */
+(function initParticles() {
+  const hero = document.getElementById('home');
+  if (!hero) return;
+
+  const container = document.createElement('div');
+  container.className = 'hero-particles';
+  hero.insertBefore(container, hero.firstChild);
+
+  const count = 18;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1.5;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      top:${40 + Math.random()*55}%;
+      --dur:${5 + Math.random()*7}s;
+      --delay:${Math.random()*6}s;
+      --dx:${(Math.random()-0.5)*60}px;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+
+/* ═══════════════════════════════════════════════
+   3D TILT  — project cards
+═══════════════════════════════════════════════ */
+(function initTilt() {
+  // Runs after cards are rendered — use MutationObserver so it catches
+  // dynamically injected cards too
+  function attachTilt(card) {
+    if (card._tiltAttached) return;
+    card._tiltAttached = true;
+
+    // Inject sheen div
+    if (!card.querySelector('.pcard-sheen')) {
+      const sheen = document.createElement('div');
+      sheen.className = 'pcard-sheen';
+      card.appendChild(sheen);
+    }
+    const sheen = card.querySelector('.pcard-sheen');
+
+    const MAX_ROT = 12; // degrees
+
+    card.addEventListener('mousemove', e => {
+      const r   = card.getBoundingClientRect();
+      const px  = (e.clientX - r.left) / r.width;   // 0-1
+      const py  = (e.clientY - r.top)  / r.height;  // 0-1
+      const rx  = (py - 0.5) * -MAX_ROT;            // tilt X axis
+      const ry  = (px - 0.5) *  MAX_ROT;            // tilt Y axis
+
+      card.style.transform =
+        `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px) scale(1.02)`;
+      card.style.boxShadow =
+        `${-ry*1.5}px ${rx*1.5}px 40px rgba(200,241,53,0.12),
+         0 20px 60px rgba(0,0,0,0.4)`;
+
+      // Move sheen
+      sheen.style.setProperty('--mx', `${px*100}%`);
+      sheen.style.setProperty('--my', `${py*100}%`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.boxShadow = '';
+    });
+  }
+
+  // Attach to any .pcard currently in DOM
+  document.querySelectorAll('.pcard').forEach(attachTilt);
+
+  // Also attach to future cards injected by renderProjects()
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(m =>
+      m.addedNodes.forEach(node => {
+        if (node.nodeType !== 1) return;
+        if (node.classList?.contains('pcard')) attachTilt(node);
+        node.querySelectorAll?.('.pcard').forEach(attachTilt);
+      })
+    );
+  });
+  const grid = document.getElementById('projGrid');
+  if (grid) observer.observe(grid, { childList: true, subtree: true });
+})();
+
+
+/* ═══════════════════════════════════════════════
+   MAGNETIC BUTTONS  — hero CTAs follow cursor
+═══════════════════════════════════════════════ */
+(function initMagneticBtns() {
+  document.querySelectorAll('.hero-actions .btn-main, .hero-actions .btn-ghost')
+    .forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r  = btn.getBoundingClientRect();
+        const dx = (e.clientX - r.left - r.width  / 2) * 0.35;
+        const dy = (e.clientY - r.top  - r.height / 2) * 0.35;
+        btn.style.transform = `translate(${dx}px, ${dy}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+})();
+
+
+/* ═══════════════════════════════════════════════
+   SMOOTH SCROLL NUMBER COUNT for GitHub stats
+   (animates when they scroll into view)
+═══════════════════════════════════════════════ */
+(function initGhStatCount() {
+  const stats = document.querySelectorAll('.gh-stat strong');
+  if (!stats.length) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el  = e.target;
+      const raw = el.textContent;
+      const num = parseInt(raw, 10);
+      if (isNaN(num) || num < 2) return; // skip "—" or tiny
+      const dur = 1200, t0 = performance.now();
+      const tick = now => {
+        const p = Math.min((now - t0) / dur, 1);
+        el.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * num);
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = raw; // restore original (may have +)
+      };
+      requestAnimationFrame(tick);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  stats.forEach(s => io.observe(s));
+})();
